@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="css/jquery-ui.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">消息维护</a></li>
+		<li><a href="#tabs-2">自动回复</a></li>
+		<li><a href="#tabs-3">请求测试</a></li>
+	</ul>
+	<div id="tabs-1">
+		<div><input id="replayContent" type="text"><button id="addBtn">添加</button><button id="delBtn">删除</button></div>
+		<div>
+			<select size="5" id="content">
+				<option value="顾客现在忙，不方便接听电话，后续跟进中。">顾客现在忙，不方便接听电话，后续跟进中。</option>
+				<option value="顾客现在忙，不方便接听电话，后续跟进中。">顾客现在忙，不方便接听电话，后续跟进中。</option>
+			</select>
+		</div>
+	</div>
+	<div id="tabs-2">
+		<div>
+			<button id="doWorkBtn">开始处理</button>
+		</div>
+		<textarea id="doneMsg" style="width: 600px;height: 400px;"></textarea>
+	</div>
+	<div id="tabs-3">
+		<div>
+			<label style="with:100px;display: block;">请求头：</label><textarea style="width: 600px;height: 60px;"></textarea>
+		</div>
+		<div>
+			<label style="with:100px;display: block;">请求参数：</label><textarea style="width: 600px;height: 60px;"></textarea>
+		</div>
+		<div>
+			<label style="with:100px;display: block;">方法：</label><input type="radio" name="method" value="get">GET<input type="radio" name="method" value="post">POST
+		</div>
+		<div>
+			<button>执行</button>
+		</div>
+		<div>
+			<textarea style="width: 600px;height: 200px;"></textarea>
+		</div>
+	</div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
