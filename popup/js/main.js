@@ -76,9 +76,11 @@
 			delReplayContent();
 		});
 		
-		$("button#doWorkBtn").click(function(){
-			var querying = browser.tabs.query({url:"https://www.baidu.com/"});
-			querying.then(logTabs, onError);
+		$("#doWorkBtn").click(function(){
+			  var url = "http://192.168.1.133:8080/mytoolkit/HelloServlet";
+			  $.get(url, function(result){
+				$("#doneMsg").val(result);
+			  });
 		});
 	});
 
