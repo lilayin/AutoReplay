@@ -1,17 +1,17 @@
 {
 
-  "manifest_version": 1,
+  "manifest_version": 2,
   "name": "AutoReplay",
   "version": "1.0",
 
-  "description": "自动回复",
+  "description": "AutoReplay",
 
   "icons": {
     "48": "icons/border-48.jpeg"
   },
 
   "permissions": [
-    "activeTab","sessions","alarms","webRequest","tabs","*://*/mytoolkit/*","*://*/crm.meierbei.com/*","webRequest"
+    "activeTab","sessions","alarms","webRequest","tabs","*://crm.meierbei.com/*"
   ],
 
   "browser_action": {
