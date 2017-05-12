@@ -71,19 +71,95 @@
 		
 		var url = "http://crm.meierbei.com/Customer/CustomerGenJin";
 		var postData = "clientId="+id+"&content="+content;
+		postData = encodeURI(postData);
 		var msg = "处理失败";
 		var request = new XMLHttpRequest();
 		request.onreadystatechange = function () {
 			var DONE = this.DONE || 4;
 			if (this.readyState === DONE){
-				msg = this.responseText;
+				if(this.status==200) {
+					msg = this.responseText;
+				}
 			}
 		};
-		request.open("POST", url, false);
-		request.setRequestHeader("X-Requested-With", "XMLHttpRequest"); 
+		request.open("POST", url, true);
+		request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"); 
 		request.send(postData);
 		return msg;
 	}	
+
+
+	function isChinese(temp) {  
+	    var re=/[^\u4e00-\u9fa5]/;  
+	    if(re.test(temp)) return false;  
+	    return true;  
+	}  
+
+
+	function getUser(id){
+		
+		var url = 'http://crm.meierbei.com/Customer/AskFor';
+		var postData = "clientid="+id;
+		postData = encodeURI(postData);
+		var msg = "处理失败";
+		var request = new XMLHttpRequest();
+		request.onreadystatechange = function () {
+			var DONE = this.DONE || 4;
+			if (this.readyState === DONE){
+				if(this.status==200) {
+					msg = this.responseText;
+				}
+			}
+		};
+		request.open("POST", url, true);
+		request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"); 
+		request.send(postData);
+		return msg;
+	}	
+
+	function getResource() {
+		var date = new Date();
+		var time = date.getTime();
+		
+		var index = 0;
+		var number = 0;
+
+		while(number<10) {
+			var queryUrl = 'http://crm.meierbei.com/Customer/CirculateManageList?sEcho=2&iColumns=9&sColumns=&iDisplayStart='+index+'&iDisplayLength=20&mDataProp_0=cID&mDataProp_1=intentionLevel&mDataProp_2=2&mDataProp_3=Contacttime&mDataProp_4=area&mDataProp_5=SpreadSource&mDataProp_6=SpreadUserName&mDataProp_7=addTime&mDataProp_8=lastContactTime&searchKey={"cName":"","QQ":"","tel":"","Wechat":"","aTime_Start":"","aTime_End":"","intentionLevel":"A","CirculateType":"1","orderby":"desc","kefu":"","tgtype":"","parea":"","carea":"","projectbig":"d2e74ec6-d1dd-4521-9f21-297bf4870fc4","LastGenjTime":"","beg_lastContact_time":"","end_lastContact_time":""}&_='+time;
+			MyAjax(queryUrl, 'GET',  function(responseData){
+				try {
+					var a = JSON.parse(responseData); 
+					var client = a.aaData;
+					for(var i=0; i<client.length; i++) {
+						var id = client[i].ID;
+						var name = client[i].cName;
+						var level = client[i].intentionLevel;
+						var lastContactTime = client[i].lastContactTime;
+						var flag = isChinese(name);
+						if(flag && name.length>1 && level === "A" && name.indexOf("先生") < 0 && name.indexOf("女士") < 0){
+							var len = name.length;
+							var content = $("#userMsg").val();
+							content += id + ":" +name+":"+name.length + "\n";
+							$("#userMsg").val(content);
+							number++;
+							getUser(id);
+						}
+
+				
+					}
+				} catch(error){ 
+					var content = $("#userMsg").val();
+					content += "服务器内部错误\n";		
+					$("#userMsg").val(content);
+				}
+			});
+			index = (index+1)*20;
+		}
+		
+	}
+
 
 	$( "#tabs" ).tabs();
 	
@@ -98,8 +174,15 @@
 		$("button#delBtn").click(function(){
 			delReplayContent();
 		});
+
+		$("button#getUserBtn").click(function(){
+			$("#getUserBtn").attr("disabled", true);
+			getResource();
+			$("#getUserBtn").attr("disabled", false);
+		});
 		
 		$("#doWorkBtn").click(function(){
+			$("#doWorkBtn").attr("disabled", true);
 			var date = new Date();
 
 			var start = 0;
@@ -154,7 +237,7 @@
 								
 								var retMsg = genJin(id, replyMsg);
 
-								content += id + ":" + name + "=>" + retMsg + "\n";
+								content += id + ":" + name +"=>" + replyMsg + "=>" + retMsg + "\n";
 								$("#doneMsg").val(content);
 							}			
 						});
@@ -164,6 +247,7 @@
 				});
 
 			}
+			$("#doWorkBtn").attr("disabled", false);
 		});
 	});
 

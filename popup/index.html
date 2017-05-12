@@ -11,7 +11,7 @@
 	<ul>
 		<li><a href="#tabs-1">消息维护</a></li>
 		<li><a href="#tabs-2">自动回复</a></li>
-		<li><a href="#tabs-3">请求测试</a></li>
+		<li><a href="#tabs-3">索取客户</a></li>
 	</ul>
 	<div id="tabs-1">
 		<div><input id="replayContent" type="text"><button id="addBtn">添加</button><button id="delBtn">删除</button></div>
@@ -30,20 +30,9 @@
 	</div>
 	<div id="tabs-3">
 		<div>
-			<label style="with:100px;display: block;">请求头：</label><textarea style="width: 600px;height: 60px;"></textarea>
+			<input id="userSize" type="text" placeholder="数量"><button id="getUserBtn">索取客户</button>
 		</div>
-		<div>
-			<label style="with:100px;display: block;">请求参数：</label><textarea style="width: 600px;height: 60px;"></textarea>
-		</div>
-		<div>
-			<label style="with:100px;display: block;">方法：</label><input type="radio" name="method" value="get">GET<input type="radio" name="method" value="post">POST
-		</div>
-		<div>
-			<button>执行</button>
-		</div>
-		<div>
-			<textarea style="width: 600px;height: 200px;"></textarea>
-		</div>
+		<textarea id="userMsg" style="width: 600px;height: 400px;"></textarea>
 	</div>
 </div>
 
