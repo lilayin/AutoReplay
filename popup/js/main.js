@@ -24,28 +24,33 @@
 	
 	function initReplayContent(){
 		var dt = localStorage.getItem("contents");
-        	if(dt) {
-        		var json = JSON.parse(dt);
-        		for(var i=0; i<json.length; i++) {
+		if(dt) {
+			var json = JSON.parse(dt);
+			for(var i=0; i<json.length; i++) {
 				var content = json[i];
 				$option = $("<option>");
 				$option.val(content);
 				$option.text(content);
 				$("#content").append($option);
-        		}
-        	}
+			}
+		}
 	}
 	
 	function delReplayContent() {
 		var se = document.getElementById("content");
-		var optionElements = se.getElementsByTagName("option");
-		var len = optionElements.length;
-    		for(var i = len-1; i >= 0; i--){
-		    	if(i > 1) {
-		    		document.getElementById("content").options.remove(i); 
-		    	}
-		}
-		localStorage.clear();
+		var idx = se.selectedIndex;
+		if(idx>-1) {
+            document.getElementById("content").options.remove(idx);
+        }
+        localStorage.setItem("contents", {});
+        var optionElements = se.getElementsByTagName("option");
+        var json = [];
+		for(var i = 0; i < optionElements.length; i++){
+            $option = $(optionElements[i]);
+            json.push($option.val());
+        }
+        var jsonText = JSON.stringify(json);
+        localStorage.setItem("contents", jsonText);
 	}
 	
 	function MyAjax(url, method, success, failure) {
@@ -82,7 +87,7 @@
 				}
 			}
 		};
-		request.open("POST", url, true);
+		request.open("POST", url, false);
 		request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"); 
 		request.send(postData);
@@ -97,25 +102,40 @@
 	}  
 
 
-	function getUser(id){
+	function getCriUser(id){
+		var url = "http://crm.meierbei.com/Customer/AskFor";
+		var msg = "处理失败";
 		
-		var url = 'http://crm.meierbei.com/Customer/AskFor';
+/**
+
 		var postData = "clientid="+id;
-		postData = encodeURI(postData);
 		var msg = "处理失败";
 		var request = new XMLHttpRequest();
 		request.onreadystatechange = function () {
 			var DONE = this.DONE || 4;
 			if (this.readyState === DONE){
-				if(this.status==200) {
-					msg = this.responseText;
-				}
+				msg = this.responseText;
 			}
 		};
-		request.open("POST", url, true);
+		request.open("post", url, true);
 		request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 		request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"); 
 		request.send(postData);
+**/
+		   $.ajax({
+		        url: url,
+		        type: "post",
+		        dataType: "json",
+		        data: { clientid: id },
+		        beforeSend: function () {
+		        },
+		        error: function () {
+		        },
+		        success: function (data) {
+				msg = data;
+		        }
+		    });
+
 		return msg;
 	}	
 
@@ -126,7 +146,7 @@
 		var index = 0;
 		var number = 0;
 
-		while(number<10) {
+		while(number<1) {
 			var queryUrl = 'http://crm.meierbei.com/Customer/CirculateManageList?sEcho=2&iColumns=9&sColumns=&iDisplayStart='+index+'&iDisplayLength=20&mDataProp_0=cID&mDataProp_1=intentionLevel&mDataProp_2=2&mDataProp_3=Contacttime&mDataProp_4=area&mDataProp_5=SpreadSource&mDataProp_6=SpreadUserName&mDataProp_7=addTime&mDataProp_8=lastContactTime&searchKey={"cName":"","QQ":"","tel":"","Wechat":"","aTime_Start":"","aTime_End":"","intentionLevel":"A","CirculateType":"1","orderby":"desc","kefu":"","tgtype":"","parea":"","carea":"","projectbig":"d2e74ec6-d1dd-4521-9f21-297bf4870fc4","LastGenjTime":"","beg_lastContact_time":"","end_lastContact_time":""}&_='+time;
 			MyAjax(queryUrl, 'GET',  function(responseData){
 				try {
@@ -139,12 +159,11 @@
 						var lastContactTime = client[i].lastContactTime;
 						var flag = isChinese(name);
 						if(flag && name.length>1 && level === "A" && name.indexOf("先生") < 0 && name.indexOf("女士") < 0){
-							var len = name.length;
 							var content = $("#userMsg").val();
-							content += id + ":" +name+":"+name.length + "\n";
+							content += id + ":" +name + "\n";
 							$("#userMsg").val(content);
 							number++;
-							getUser(id);
+							getCriUser(id);
 						}
 
 				
