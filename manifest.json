@@ -7,7 +7,9 @@
   "description": "AutoReplay",
 
   "icons": {
-    "48": "icons/border-48.jpeg"
+    "16": "icons/robot.jpeg",
+    "48": "icons/robot.jpeg",
+    "128": "icons/robot.jpeg"
   },
 
   "permissions": [
@@ -15,9 +17,13 @@
   ],
 
   "browser_action": {
-    "default_icon": "icons/border-48.jpeg",
+    "default_icon": {
+      "16": "icons/robot.jpeg",
+      "48": "icons/robot.jpeg",
+      "128": "icons/robot.jpeg"
+
+    },
     "default_title": "自动回复",
     "default_popup": "popup/index.html"
   }
-
 }
